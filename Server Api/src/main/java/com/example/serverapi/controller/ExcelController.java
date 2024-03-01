@@ -24,7 +24,7 @@ public class ExcelController {
     private final ProductService productService;
     private final ExcelService excelService;
 
-    @GetMapping("download-products")
+    @GetMapping("/download-products")
     public ResponseEntity<byte[]> downloadProducts() {
         List<ResProductDto> dtoList = productService.getAll(Pageable.ofSize(10000));
 

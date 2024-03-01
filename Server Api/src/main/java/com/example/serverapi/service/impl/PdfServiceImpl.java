@@ -12,12 +12,14 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
+import static com.example.serverapi.util.PdfUtil.getCell;
+
 @Service
 public class PdfServiceImpl implements PdfService {
     @Override
     public byte[] downloadProducts(List<ResProductDto> dtoList) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
-            Document document = new Document(PageSize.A4.rotate());
+            Document document = new Document(PageSize.A4, 7f, 7f, 7f, 7f);
 
             PdfWriter writer = PdfWriter.getInstance(document, out);
 
@@ -37,19 +39,55 @@ public class PdfServiceImpl implements PdfService {
     }
 
     private PdfPTable getProductTable(List<ResProductDto> dtoList) throws DocumentException {
+        String TNR = "fonts/times.ttf";
+        String TNRB = "fonts/timesbd.ttf";
+
+        FontFactory.register(TNR, "times regular");
+        FontFactory.register(TNRB, "times bold");
+
+        Font fontHeader18 = FontFactory.getFont("times bold", BaseFont.IDENTITY_H, true, 18);
+        Font font14 = FontFactory.getFont("times bold", BaseFont.IDENTITY_H, true, 14);
+        Font font12 = FontFactory.getFont("times regular", BaseFont.IDENTITY_H, true, 12);
+
+
         PdfPTable pdfPTable = new PdfPTable(9);
         pdfPTable.setWidthPercentage(100f);
-        pdfPTable.setWidths(new float[]{1f, 1.3f, 3f, 1.5f, 1f, 2f, 3f, 2f, 3f});
-
-        Font fontHead = FontFactory.getFont("Times New Roman", BaseFont.IDENTITY_H, true, 16);
-
-        PdfPCell cellN = new PdfPCell(new Paragraph("№"));
-
-        cellN.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cellN.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        pdfPTable.setWidths(new float[]{1f, 1.3f, 3f, 1.5f, 2f, 2.2f, 3f, 2.2f, 3f});
 
 
+        PdfPCell headerCell = new PdfPCell(new Paragraph("Products", fontHeader18));
+        headerCell.setColspan(9);
+        headerCell.setPaddingBottom(5f);
+        headerCell.setBorder(Rectangle.NO_BORDER);
+        headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
-        return null;
+        pdfPTable.addCell(headerCell);
+
+        pdfPTable.addCell(getCell("t/r", font14, false));
+        pdfPTable.addCell(getCell("Id", font14, false));
+        pdfPTable.addCell(getCell("Name", font14, true));
+        pdfPTable.addCell(getCell("Price", font14, false));
+        pdfPTable.addCell(getCell("Amount", font14, false));
+        pdfPTable.addCell(getCell("Created", font14, false));
+        pdfPTable.addCell(getCell("Created By", font14, true));
+        pdfPTable.addCell(getCell("Updated", font14, false));
+        pdfPTable.addCell(getCell("Updated By", font14, true));
+
+        for (int i = 0; i < dtoList.size(); i++) {
+            ResProductDto resProductDto = dtoList.get(i);
+
+            pdfPTable.addCell(getCell(String.valueOf(i + 1), font12, false));
+            pdfPTable.addCell(getCell(resProductDto.getId().toString(), font12, false));
+            pdfPTable.addCell(getCell(resProductDto.getName(), font12, true));
+            pdfPTable.addCell(getCell(resProductDto.getPrice().toString(), font12, false));
+            pdfPTable.addCell(getCell(resProductDto.getAmount().toString(), font12, false));
+            pdfPTable.addCell(getCell(resProductDto.getCreated().toString(), font12, false));
+            pdfPTable.addCell(getCell(resProductDto.getCreatedBy(), font12, true));
+            pdfPTable.addCell(getCell(resProductDto.getUpdated().toString(), font12, false));
+            pdfPTable.addCell(getCell(resProductDto.getUpdatedBy(), font12, true));
+        }
+
+        return pdfPTable;
     }
 }

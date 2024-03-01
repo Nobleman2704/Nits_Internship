@@ -30,7 +30,7 @@ public class PdfController {
 
         byte[] response = pdfService.downloadProducts(dtoList);
 
-        HttpHeaders headers = HttpUtils.getHttpHeaders("products");
+        HttpHeaders headers = HttpUtils.getPdfHttpHeaders("products");
 
         return new ResponseEntity<>(response, headers, HttpStatus.OK);
     }

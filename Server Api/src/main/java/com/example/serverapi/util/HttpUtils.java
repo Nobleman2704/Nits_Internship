@@ -10,4 +10,11 @@ public class HttpUtils {
         headers.setContentDispositionFormData("attachment", filename.concat(".xlsx"));
         return headers;
     }
+
+    public static HttpHeaders getPdfHttpHeaders(String filename) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", filename.concat(".pdf"));
+        return headers;
+    }
 }
