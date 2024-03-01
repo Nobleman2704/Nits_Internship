@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: Asadbek
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      schema: nits_internship
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  refresh-token:
+    expiration: 360000000
+
+  access-token:
+    expiration: 2000000
+
+  secret-key: 5A7134743777217A25432A46294A404E635266556A586E3272357538782F413F4428472B4B6150645367566B5970337336763979244226452948404D63516554
