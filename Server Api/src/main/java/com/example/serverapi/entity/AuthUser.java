@@ -17,32 +17,24 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-@Entity(name = "AUTH_USER")
+@Entity(name = "auth_user")
 @EntityListeners(AuditingEntityListener.class)
 public class AuthUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "AUTH_USER_id_gen")
     @SequenceGenerator(name = "AUTH_USER_id_gen", sequenceName = "auth_user_seq", allocationSize = 1)
-    @Column(name = "ID")
     private Long id;
-    @Column(name = "USERNAME")
     private String username;
-    @Column(name = "PASSWORD")
     private String password;
-    @Column(name = "ROLE")
     @Enumerated(EnumType.STRING)
     private List<Role> roleList;
     @CreatedDate
-    @Column(name = "CREATED")
     private LocalDateTime created;
     @CreatedBy
-    @Column(name = "CREATED_BY")
     private String createdBy;
     @LastModifiedDate
-    @Column(name = "UPDATED")
     private LocalDateTime updated;
     @LastModifiedBy
-    @Column(name = "UPDATED_BY")
     private String updatedBy;
 
     @Override

@@ -1,18 +1,16 @@
 package com.example.serverapi.service.impl;
 
-import com.example.serverapi.config.securiy.JwtService;
 import com.example.serverapi.dto.auth_user.AuthAndRegRequest;
 import com.example.serverapi.dto.token.UserTokenResponse;
 import com.example.serverapi.entity.AuthUser;
-import com.example.serverapi.enums.Role;
 import com.example.serverapi.mapper.AuthUserMapperMapper;
 import com.example.serverapi.repository.AuthUserRepository;
 import com.example.serverapi.service.AuthService;
+import com.example.serverapi.service.JwtService;
+import com.itextpdf.text.exceptions.BadPasswordException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,32 +21,28 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
 
     @Override
-    public UserTokenResponse register(AuthAndRegRequest regRequest) {
-        if (authUserRepository.findUserEntityByUsername(regRequest.getUsername()).isPresent()) {
+    public String register(AuthAndRegRequest regRequest) {
+        if (authUserRepository.findAuthUserByUsername(regRequest.getUsername()).isPresent()) {
             throw new RuntimeException("Username already exists: " + regRequest.getUsername());
         }
         AuthUser userEntity = authUserMapperMapper.toEntity(regRequest);
 
+        if (userEntity.getRoleList().isEmpty())
+            throw new RuntimeException("User roles must not be empty");
+
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-        userEntity.setRoleList(List.of(Role.USER));
         authUserRepository.save(userEntity);
 
-        String accessToken = jwtService.generateAccessToken(userEntity);
-        String refreshToken = jwtService.generateRefreshToken(userEntity);
-        return new UserTokenResponse(accessToken, refreshToken);
+        return "You have successfully been registered";
     }
 
     @Override
     public UserTokenResponse authenticate(AuthAndRegRequest authRequest) {
-//        authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        authRequest.getUsername(),
-//                        authRequest.getPassword()
-//                )
-//        );
-
-        AuthUser userEntity = authUserRepository.findUserEntityByUsername(authRequest.getUsername())
+        AuthUser userEntity = authUserRepository.findAuthUserByUsername(authRequest.getUsername())
                 .orElseThrow(() -> new RuntimeException("Username or password is incorrect"));
+
+        if (!passwordEncoder.matches(authRequest.getPassword(), userEntity.getPassword()))
+            throw new RuntimeException("Username or password is incorrect");
 
         var accessToken = jwtService.generateAccessToken(userEntity);
         var refreshToken = jwtService.generateRefreshToken(userEntity);

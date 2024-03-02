@@ -6,5 +6,5 @@ import com.example.serverapi.dto.token.UserTokenResponse;
 public interface AuthService {
     UserTokenResponse authenticate(AuthAndRegRequest authRequest);
 
-    UserTokenResponse register(AuthAndRegRequest regRequest);
+    String register(AuthAndRegRequest regRequest);
 }

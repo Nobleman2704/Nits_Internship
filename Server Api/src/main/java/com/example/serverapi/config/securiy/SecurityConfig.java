@@ -1,5 +1,6 @@
 package com.example.serverapi.config.securiy;
 
+import com.example.serverapi.repository.AuthUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,12 +19,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final SecurityFilter securityFilter;
+
+    private final AuthUserRepository authUserRepository;
 
 //    private final AuthenticationProvider authenticationProvider;
 
     private final String[] WHITE_LIST = {
-            "/api/v1/auth/**"
+            "/api/auth/sign-up",
+            "/api/auth/sign-in",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
     };
 
     @Bean
@@ -38,16 +44,16 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
 //                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return username -> userDao.findUserEntityByUsername(username).orElseThrow(() ->
-//                new UsernameNotFoundException("User not found"));
-//    }
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> authUserRepository.findAuthUserByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

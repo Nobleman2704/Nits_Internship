@@ -3,7 +3,6 @@ package com.example.serverapi.config.securiy;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -17,6 +16,6 @@ public class AuditorAwareImpl implements AuditorAware<String> {
         if (authentication == null || !authentication.isAuthenticated())
             return Optional.of("test-user");
 
-        return Optional.of(((UserDetails) authentication).getUsername());
+        return Optional.of(authentication.getName());
     }
 }

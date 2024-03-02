@@ -31,7 +31,7 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("Nits internship")
                         .version("2.1.0")
-                        .description("description")
+                        .description("Swagger for Nits Internship project")
                         .termsOfService("Terms of service")
                 );
     }
