@@ -1,6 +1,6 @@
 package com.example.serverapi.controller;
 
-import com.example.serverapi.dto.ResProductDto;
+import com.example.serverapi.dto.product.ResProductDto;
 import com.example.serverapi.service.PdfService;
 import com.example.serverapi.service.ProductService;
 import com.example.serverapi.util.HttpUtils;

@@ -1,7 +1,7 @@
 package com.example.serverapi.mapper;
 
-import com.example.serverapi.dto.ReqProductDto;
-import com.example.serverapi.dto.ResProductDto;
+import com.example.serverapi.dto.product.ReqProductDto;
+import com.example.serverapi.dto.product.ResProductDto;
 import com.example.serverapi.entity.Product;
 import org.mapstruct.*;
 

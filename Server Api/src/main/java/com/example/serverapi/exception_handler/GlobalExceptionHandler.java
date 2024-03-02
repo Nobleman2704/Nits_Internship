@@ -1,6 +1,6 @@
 package com.example.serverapi.exception_handler;
 
-import com.example.serverapi.dto.ResponseDto;
+import com.example.serverapi.dto.product.ResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

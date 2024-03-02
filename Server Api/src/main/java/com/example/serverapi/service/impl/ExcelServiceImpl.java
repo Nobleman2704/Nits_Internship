@@ -1,6 +1,6 @@
 package com.example.serverapi.service.impl;
 
-import com.example.serverapi.dto.ResProductDto;
+import com.example.serverapi.dto.product.ResProductDto;
 import com.example.serverapi.service.ExcelService;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;

@@ -1,7 +1,7 @@
 package com.example.serverapi.service;
 
-import com.example.serverapi.dto.ReqProductDto;
-import com.example.serverapi.dto.ResProductDto;
+import com.example.serverapi.dto.product.ReqProductDto;
+import com.example.serverapi.dto.product.ResProductDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

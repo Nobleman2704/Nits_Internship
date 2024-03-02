@@ -1,6 +1,6 @@
 package com.example.serverapi.service.impl;
 
-import com.example.serverapi.dto.ResProductDto;
+import com.example.serverapi.dto.product.ResProductDto;
 import com.example.serverapi.service.PdfService;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;

@@ -1,8 +1,8 @@
 package com.example.serverapi.controller;
 
-import com.example.serverapi.dto.ReqProductDto;
-import com.example.serverapi.dto.ResProductDto;
-import com.example.serverapi.dto.ResponseDto;
+import com.example.serverapi.dto.product.ReqProductDto;
+import com.example.serverapi.dto.product.ResProductDto;
+import com.example.serverapi.dto.product.ResponseDto;
 import com.example.serverapi.service.ProductService;
 import com.example.serverapi.util.BindingResultUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
