@@ -10,23 +10,5 @@ import javax.cache.Caching;
 
 @Configuration
 public class RedisConfig {
-    @Bean
-    public Config config() {
-        Config config = new Config();
-        config.useSingleServer().setAddress("redis://localhost:6379");
-        return config;
-    }
 
-    @Bean(name = "springCM")
-    public CacheManager cacheManager(Config config) {
-        CacheManager manager = Caching.getCachingProvider().getCacheManager();
-        manager.createCache("cache", RedissonConfiguration.fromConfig(config));
-        manager.createCache("userList", RedissonConfiguration.fromConfig(config));
-        return manager;
-    }
-
-//    @Bean
-//    ProxyManager<String> proxyManager(CacheManager cacheManager) {
-//        return new JCacheProxyManager<>(cacheManager.getCache("cache"));
-//    }
 }

@@ -7,7 +7,6 @@ import com.example.serverapi.mapper.AuthUserMapperMapper;
 import com.example.serverapi.repository.AuthUserRepository;
 import com.example.serverapi.service.AuthService;
 import com.example.serverapi.service.JwtService;
-import com.itextpdf.text.exceptions.BadPasswordException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserTokenResponse authenticate(AuthAndRegRequest authRequest) {
-        AuthUser userEntity = authUserRepository.findAuthUserByUsername(authRequest.getUsername())
+        String username = authRequest.getUsername();
+
+        AuthUser userEntity = authUserRepository.findAuthUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Username or password is incorrect"));
 
         if (!passwordEncoder.matches(authRequest.getPassword(), userEntity.getPassword()))

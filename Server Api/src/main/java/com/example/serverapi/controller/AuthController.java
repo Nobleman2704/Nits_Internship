@@ -56,14 +56,13 @@ public class AuthController {
 
         String authentication = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        String token = authentication.substring(7);
+        String refreshToken = authentication.substring(7);
 
-        String username = jwtService.extractUsername(token);
+        String username = jwtService.extractUsername(refreshToken);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         String accessToken = jwtService.generateAccessToken(userDetails);
-        String refreshToken = jwtService.generateRefreshToken(userDetails);
 
         return ResponseDto.ok(new UserTokenResponse(accessToken, refreshToken));
     }

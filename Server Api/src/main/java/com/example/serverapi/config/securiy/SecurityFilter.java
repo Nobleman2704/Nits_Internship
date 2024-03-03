@@ -25,7 +25,6 @@ import java.util.List;
 public class SecurityFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-//    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -50,8 +49,6 @@ public class SecurityFilter extends OncePerRequestFilter {
         final String username = jwtService.extractUsername(jwt);
         final List<SimpleGrantedAuthority> userAuthorities = jwtService.getUserAuthorities(jwt);
         if (username != null) {
-//            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-//            if (jwtService.isTokenValid(jwt, userDetails)) {
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     username,
                     null,
@@ -61,7 +58,6 @@ public class SecurityFilter extends OncePerRequestFilter {
                     new WebAuthenticationDetailsSource().buildDetails(request)
             );
             SecurityContextHolder.getContext().setAuthentication(authToken);
-//            }
         }
 
         filterChain.doFilter(request, response);
