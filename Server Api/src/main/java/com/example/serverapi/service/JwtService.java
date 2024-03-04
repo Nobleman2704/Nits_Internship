@@ -1,16 +1,11 @@
 package com.example.serverapi.service;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.List;
-
 public interface JwtService {
-    String extractUsername(String token);
+    String extractIdFromToken(String token);
 
-    List<SimpleGrantedAuthority> getUserAuthorities(String token);
+//    List<SimpleGrantedAuthority> getUserAuthorities(String token);
 
-    String generateAccessToken(UserDetails userDetails);
+    String generateAccessToken(String uuid);
 
-    String generateRefreshToken(UserDetails userEntity);
+    String generateRefreshToken(String uuid);
 }

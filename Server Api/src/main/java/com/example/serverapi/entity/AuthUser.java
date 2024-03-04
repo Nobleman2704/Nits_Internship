@@ -1,5 +1,6 @@
 package com.example.serverapi.entity;
 
+import com.example.serverapi.enums.Authority;
 import com.example.serverapi.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity(name = "auth_user")
@@ -28,6 +30,8 @@ public class AuthUser implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private List<Role> roleList;
+    @Enumerated(EnumType.STRING)
+    private List<Authority> authorityList;
     @CreatedDate
     private LocalDateTime created;
     @CreatedBy
@@ -39,9 +43,15 @@ public class AuthUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roleList.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
-                .toList();
+        List<SimpleGrantedAuthority> list = roleList.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_".concat(role.name())))
+                .collect(Collectors.toList());
+
+        if (!authorityList.isEmpty())
+            authorityList.forEach(authority -> {
+                list.add(new SimpleGrantedAuthority(authority.name()));
+            });
+        return list;
     }
 
     @Override

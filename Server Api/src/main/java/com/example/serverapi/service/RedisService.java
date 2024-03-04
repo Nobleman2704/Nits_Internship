@@ -1,10 +1,11 @@
 package com.example.serverapi.service;
 
-import com.example.serverapi.entity.AuthUser;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface RedisService {
-    void saveUserDetails(String username, AuthUser authUser);
+    void saveUserDetails(String id, UserDetails authUser);
 
-    UserDetails getUserDetailsByUsername(String username);
+    UserDetails getUserDetailsById(String id);
+
+    Boolean updateExpirationTime(String id);
 }

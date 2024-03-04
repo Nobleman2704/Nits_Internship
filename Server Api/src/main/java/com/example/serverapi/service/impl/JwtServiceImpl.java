@@ -8,17 +8,10 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -28,54 +21,33 @@ public class JwtServiceImpl implements JwtService {
     private String secret_key;
 
     @Value("${jwt.expiration.refresh-token}")
-    private Long refresh_token_expiration;
+    private Long REFRESH_TOKEN_EXPIRATION;
 
     @Value("${jwt.expiration.access-token}")
-    private Long access_token_expiration;
+    private Long ACCESS_TOKEN_EXPIRATION;
 
     @Override
-    public String extractUsername(String token) {
+    public String extractIdFromToken(String token) {
         return extractAllClaim(token, Claims::getSubject);
     }
 
     @Override
-    public List<SimpleGrantedAuthority> getUserAuthorities(String token) {
-        Claims claim = extractAllClaims(token);
-        List<String> authorities = (List<String>) claim.get("roles");
-        return authorities
-                .stream()
-                .map(SimpleGrantedAuthority::new)
-                .toList();
+    public String generateAccessToken(String uuid) {
+        return generateToken(uuid, ACCESS_TOKEN_EXPIRATION);
     }
 
     @Override
-    public String generateAccessToken(UserDetails userDetails) {
-        List<String> authorities = getAuthorities(userDetails.getAuthorities());
-        return generateToken(authorities, userDetails, access_token_expiration);
+    public String generateRefreshToken(String uuid) {
+        return generateToken(uuid, REFRESH_TOKEN_EXPIRATION);
     }
 
-    @Override
-    public String generateRefreshToken(UserDetails userEntity) {
-        List<String> authorities = getAuthorities(userEntity.getAuthorities());
-
-        return generateToken(authorities, userEntity, refresh_token_expiration);
-    }
-
-    private String generateToken(List<String> authorities, UserDetails userDetails, Long expirationTime) {
+    private String generateToken(String uuid, Long expirationTime) {
         return Jwts.builder()
-                .addClaims(Map.of("roles", authorities))
-                .setSubject(userDetails.getUsername())
+                .setSubject(uuid)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .setExpiration(new Date(System.currentTimeMillis() + (expirationTime * 1000)))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS512)
                 .compact();
-    }
-
-    private List<String> getAuthorities(Collection<? extends GrantedAuthority> authorities) {
-        return authorities
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
     }
 
     private Claims extractAllClaims(String token) {
