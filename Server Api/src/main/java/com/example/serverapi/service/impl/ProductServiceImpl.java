@@ -21,7 +21,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ResProductDto> getAll(Pageable pageable) {
-        return productMapper.toDto(productRepository.findAll());
+        return productMapper.toDto(productRepository.findAll(pageable).getContent());
     }
 
     @Override

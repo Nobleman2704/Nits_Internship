@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +22,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/pdf")
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class PdfController {
     private final ProductService productService;
     private final PdfService pdfService;
 
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('DOWNLOAD')")
     @GetMapping("download-products")
     public ResponseEntity<byte[]> downloadProducts() {
         List<ResProductDto> dtoList = productService.getAll(Pageable.ofSize(10000));

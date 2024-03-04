@@ -58,7 +58,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                     .toList();
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    id,
+                    userDetails.getUsername(),
                     null,
                     userAuthorities);
 
