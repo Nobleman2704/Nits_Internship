@@ -1,6 +1,7 @@
 package com.example.serverapi.dto.auth_user;
 
 import com.example.serverapi.annotation.PasswordValidatorPattern;
+import com.example.serverapi.enums.Authority;
 import com.example.serverapi.enums.Role;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -32,4 +33,5 @@ public class AuthAndRegRequest {
     private String password;
 
     private List<Role> roleList;
+    private List<Authority> authorityList;
 }
