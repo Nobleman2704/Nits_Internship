@@ -7,32 +7,23 @@ import com.example.serverapi.mapper.ProductMapper;
 import com.example.serverapi.repository.ProductRepository;
 import com.example.serverapi.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@DataJpaTest
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class ProductServiceTest {
     @Autowired
     private ProductRepository productRepository;
 
-    @MockBean
+    @Autowired
     private ProductMapper productMapper;
 
-    @MockBean
+    @Autowired
     private ProductServiceImpl productService;
 
     @Test
@@ -47,7 +38,9 @@ class ProductServiceTest {
         product.setAmount(74);
         product.setPrice(10.5D);
 
-        when(productMapper.toEntity(eq(productDto))).thenReturn(product);
+        Product product1 = productMapper.toEntity(productDto);
+
+        assertThat(product1.getName()).isEqualTo(product.getName());
 
         Product savedProduct = productRepository.save(product);
 
@@ -83,9 +76,9 @@ class ProductServiceTest {
         resDto1.setAmount(74);
         resDto1.setPrice(1.5D);
 
-        List<ResProductDto> resDtoList = List.of(resDto, resDto1);
+        List<ResProductDto> resProductDtoList = productService.getAll(Pageable.ofSize(10));
 
-        when(productService.getAll(Pageable.ofSize(10))).thenReturn(resDtoList);
+        assertThat(resProductDtoList.containsAll(List.of(resDto, resDto1))).isEqualTo(true);
     }
 
     @Test
@@ -95,19 +88,21 @@ class ProductServiceTest {
         reqDto.setAmount(74);
         reqDto.setPrice(10.5D);
 
+        Long id = productService.create(reqDto);
+
         ReqProductDto reqDto1 = new ReqProductDto();
         reqDto1.setName("banana");
-        reqDto1.setAmount(74);
-        reqDto1.setPrice(10.5D);
+        reqDto1.setAmount(7);
+        reqDto1.setPrice(46.69D);
+
+        productService.update(id, reqDto1);
 
         ResProductDto resDto = new ResProductDto();
         resDto.setName("banana");
-        resDto.setAmount(74);
-        resDto.setPrice(10.5D);
+        resDto.setAmount(7);
+        resDto.setPrice(46.69D);
 
-        Long id = productService.create(reqDto);
-
-        when(productService.update(id, reqDto1)).thenReturn(id);
+        assertThat(productService.getById(id)).isEqualTo(resDto);
     }
 
     @Test
@@ -124,7 +119,7 @@ class ProductServiceTest {
 
         Long id = productService.create(reqDto);
 
-        when(productService.getById(id)).thenReturn(resDto);
+        assertThat(productService.getById(id)).isEqualTo(resDto);
     }
 
     @Test
@@ -134,13 +129,8 @@ class ProductServiceTest {
         reqDto.setAmount(74);
         reqDto.setPrice(10.5D);
 
-        ResProductDto resDto = new ResProductDto();
-        resDto.setName("Apple");
-        resDto.setAmount(74);
-        resDto.setPrice(10.5D);
-
         Long id = productService.create(reqDto);
 
-        when(productService.delete(id)).thenReturn(true);
+        assertThat(productService.delete(id)).isEqualTo(true);
     }
 }

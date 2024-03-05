@@ -7,3 +7,15 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+jwt:
+  expiration: # in second
+    refresh-token: 600
+    access-token: 300
+  secret-key: 5A7134743777217A25432A46294A404E635266556A586E3272357538782F413F4428472B4B6150645367566B5970337336763979244226452948404D63516554
+
+#refresh token and redis timeout should be the same for some reason
+redis:
+  host: localhost
+  port: 6379
+  expiration: 600 # in second
